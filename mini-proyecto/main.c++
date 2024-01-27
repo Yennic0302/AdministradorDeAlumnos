@@ -88,7 +88,7 @@ Nota Notas[990];
 void showMainMenu ();
 void menuSwitch (int op);
 
-Materia establecerPorcentajes (Materia materia);
+PorcentajeDeEvaluacion establecerPorcentajes ();
 void establecerMateria();
 
 void consultarNotasYDatosDelAlumno (int cedula);
