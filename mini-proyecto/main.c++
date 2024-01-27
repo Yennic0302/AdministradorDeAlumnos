@@ -58,10 +58,10 @@ struct Materia {
 };
 
 struct NotasDeEvaluaciones{
-  int Pnp1;
-  int Pnp2;
-  int Pnp3;
-  int Pnp4;
+  int Pn1;
+  int Pn2;
+  int Pn3;
+  int Pn4;
 };
 
 struct Nota {
