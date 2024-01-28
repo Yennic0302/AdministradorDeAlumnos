@@ -38,7 +38,7 @@ using namespace std;
 
 struct Estudiante {
   int codEst;
-  int Cedula;
+  int cedula;
   string nombreYAppellido;
   vector<int> codsMats;
 };
@@ -74,7 +74,9 @@ int codigoEstudiante = 0;
 int codigoDeMateria = 0;
 Materia materias[10];
 Estudiante estudiantes[99];
-Nota Notas[990];
+vector<Nota> notas;
+
+
 
 /*=======================================================
 // PROTOTIPOS //
@@ -93,7 +95,7 @@ void establecerMateria();
 
 void consultarNotasYDatosDelAlumno (int cedula);
 
-void cargarDatosDeAlumno(int cedula);
+void cargarDatosDeAlumno();
 
 void cargarNotasDeAlumno (int cedula);
 
@@ -170,9 +172,7 @@ void menuSwitch (int op) {
             break;
         case 3:
             system("cls");
-            cout << "cedula del estudiante: "; 
-            cin >> cedula ;
-            cargarNotasDeAlumno(cedula);
+            cargarDatosDeAlumno();
             system("pause");
             system("cls");
 
@@ -181,7 +181,7 @@ void menuSwitch (int op) {
             system("cls");
             cout << "cedula del estudiante: "; 
             cin >> cedula ;
-            modificarDatosDeAlumno(cedula);
+            cargarNotasDeAlumno(cedula);
             system("pause");
             system("cls");
             break;
@@ -189,7 +189,7 @@ void menuSwitch (int op) {
             system("cls");
             cout << "cedula del estudiante: "; 
             cin >> cedula ;
-            modificarNotasDeAlumno(cedula);
+            modificarDatosDeAlumno(cedula);
             system("pause");
             system("cls");
             break;
@@ -197,7 +197,7 @@ void menuSwitch (int op) {
             system("cls");
             cout << "cedula del estudiante: "; 
             cin >> cedula ;
-            cargarDatosDeAlumno(cedula);
+            modificarNotasDeAlumno(cedula);
             system("pause");
             system("cls");
             break;
@@ -245,43 +245,48 @@ PorcentajeDeEvaluacion establecerPorcentajes (){
 void establecerMateria(){
   Materia newMateria;
   string nombreMateria;
-  codigoDeMateria += 1;
   newMateria.codMateria = codigoDeMateria; 
   cout << "Nombre de la materia: \n";
   cin >> newMateria.Materia;
   system("cls");
   newMateria.porcentajes = establecerPorcentajes();
-  materias[codigoDeMateria - 1] = newMateria;
+  materias[codigoDeMateria] = newMateria;
+  codigoDeMateria += 1;
   cout << "\n";
   cout << "Se ha agregado correctamente la materia.\n"<<endl;
   cout << "codMat: " ; cout << newMateria.codMateria; cout << " | "; cout << newMateria.Materia; cout << "\n";
   cout << " ==========================================================================\n";
-  cout << "       Pnp1       |       Pnp2       |      Pnp3       |       pnp4       \n ";
+  cout << "       Pnp1       |       Pnp2       |       Pnp3       |       pnp4       \n ";
   cout << "==========================================================================\n";
   cout << "        "; cout <<newMateria.porcentajes.Pnp1; cout << "        |";
   cout << "        "; cout <<newMateria.porcentajes.Pnp2; cout << "        |";
   cout << "        "; cout <<newMateria.porcentajes.Pnp3; cout << "        |";
   cout << "        "; cout <<newMateria.porcentajes.Pnp4; cout << "        ";
   cout << "\n";
-
-
 }
 
 
 void consultarNotasYDatosDelAlumno (int cedula){
   cout << "consultando notas" ;
 }
-void cargarDatosDeAlumno(int cedula){
+
+// Juan Navas
+void cargarDatosDeAlumno(){
   cout << "cargando Datos";
 }
+
+// Yender Rodriguez
 
 void cargarNotasDeAlumno (int cedula){
   cout << "cargando notas";
 }
 
+// Juan Navas
 void modificarDatosDeAlumno (int cedula){
   cout << "modificando datos";
 }
+
+// Yender Rodriguez
 
 void modificarNotasDeAlumno (int cedula){
   cout << "modificando notas";
