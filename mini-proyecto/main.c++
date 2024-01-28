@@ -27,6 +27,7 @@ Comentarios:
 #include <time.h>
 #include <algorithm>
 #include <vector>
+#include <iomanip>
 
 
 using namespace std;
@@ -125,8 +126,15 @@ void emisionDeActaDeNotas (int cedula);
 
 int main (){
 int op;
+Estudiante newEstudiante ;
+newEstudiante.cedula = 28692795;
+newEstudiante.nombreYAppellido = "Yender Rodriguez";
+newEstudiante.codEst = 0;
+newEstudiante.codsMats.push_back(0);
+estudiantes[0] = newEstudiante;
   while (op != 8){
     showMainMenu();
+    cout<< "Seleccione una opcion: ";
     cin >> op;
     menuSwitch(op);
   };  
@@ -148,7 +156,6 @@ void showMainMenu (){
   cout<< "    7. Emision de Acta de Notas                                       \n";
   cout<< "    8. Salir                                                          \n";
   cout<< "                                                                      \n";
-  cout<< "                      Seleccione una opcion:                          \n";
   cout<< "======================================================================\n";
 }
 
@@ -242,27 +249,36 @@ PorcentajeDeEvaluacion establecerPorcentajes (){
   }
 };
 
+
+void mostrarMensajeDeMateria (Materia newMateria){
+  system("cls");
+  cout << "Se ha agregado correctamente la materia.\n"<<endl;
+  cout << "codMat: "  << newMateria.codMateria << " | "<<"Nombre: " << newMateria.Materia << "\n";
+  cout << " ==========================================================================\n";
+  cout << "       Pnp1       |       Pnp2       |       Pnp3       |       Pnp4       \n ";
+  cout << "==========================================================================\n";
+  cout << "        " <<newMateria.porcentajes.Pnp1 << "        |";
+  cout << "        " <<newMateria.porcentajes.Pnp2 << "        |";
+  cout << "        " <<newMateria.porcentajes.Pnp3 << "        |";
+  cout << "        " <<newMateria.porcentajes.Pnp4 << "        ";
+  cout << "\n";
+}
+
 void establecerMateria(){
+  if(codigoDeMateria == 9){
+    cout << "no se puede agregar mas materias \n";
+    return;
+  }
   Materia newMateria;
   string nombreMateria;
   newMateria.codMateria = codigoDeMateria; 
-  cout << "Nombre de la materia: \n";
+  cout << "Nombre de la materia: ";
   cin >> newMateria.Materia;
   system("cls");
   newMateria.porcentajes = establecerPorcentajes();
   materias[codigoDeMateria] = newMateria;
   codigoDeMateria += 1;
-  cout << "\n";
-  cout << "Se ha agregado correctamente la materia.\n"<<endl;
-  cout << "codMat: " ; cout << newMateria.codMateria; cout << " | "; cout << newMateria.Materia; cout << "\n";
-  cout << " ==========================================================================\n";
-  cout << "       Pnp1       |       Pnp2       |       Pnp3       |       pnp4       \n ";
-  cout << "==========================================================================\n";
-  cout << "        "; cout <<newMateria.porcentajes.Pnp1; cout << "        |";
-  cout << "        "; cout <<newMateria.porcentajes.Pnp2; cout << "        |";
-  cout << "        "; cout <<newMateria.porcentajes.Pnp3; cout << "        |";
-  cout << "        "; cout <<newMateria.porcentajes.Pnp4; cout << "        ";
-  cout << "\n";
+  mostrarMensajeDeMateria(newMateria);
 }
 
 
@@ -276,20 +292,254 @@ void cargarDatosDeAlumno(){
 }
 
 // Yender Rodriguez
+// FUNCIONES NO UTILIZADAS
+// int digitosDeNumero (int n){
+//   int digitos = floor(log10(n)+1);
+//   return digitos;
+// }
+
+// void agregarCeros (int n){
+//   cout << setfill('0') << setw(3) << n ;
+// }
+
+// int eliminarCeros (int n){
+//   string cadena = to_string(n);
+//   int i = 0; 
+//   while (cadena[i] == '0') { 
+//     i++; 
+//   }
+//   cadena.erase(0, i); 
+
+//   return stoi(cadena);
+// }
+
+
+int buscarEstudiante(int cedula) {
+  for (int i = 0; i < size(estudiantes); i++) {
+    if (estudiantes[i].cedula == cedula) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+int buscarMateria(int codigo) {
+  for (int i = 0; i < size(materias); i++) {
+    if (materias[i].codMateria == codigo) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void mostrarMaterias (vector<int> materiasDeAlumno){
+  cout << "codMateria" << " | " <<  "Nombre de Materia" << "\n";
+  cout << "==========================================="<< "\n";
+  for (int i = 0; i < size(materiasDeAlumno); i++)
+    {
+      cout << materias[materiasDeAlumno[i]].codMateria << "          | " <<  materias[materiasDeAlumno[i]].Materia << "\n";
+    }
+  cout << "\n";
+}
+
+bool inscritoAMateria (Estudiante estudiante, int codMateria) {
+  bool estaInscrito = false;
+  for (int i =0; i < size(estudiante.codsMats);i++){
+    if (estudiante.codsMats[i]==codMateria){
+      estaInscrito=true;
+      break;
+    }
+  }
+  return estaInscrito;
+}
+
+NotasDeEvaluaciones establecerNotas (){
+  NotasDeEvaluaciones nota;
+  system("cls");
+  cout << "Ingrese notas del 1 al 20 \n";
+  cout << "\n";
+  cout << "primera evaluacion:  \n";
+  cin >> nota.Pn1;
+  cout << "segunda evaluacion:  \n";
+  cin >> nota.Pn2 ;
+  cout << "tercera evaluacion:  \n";
+  cin >> nota.Pn3;
+  cout << "cuarta evaluacion:   \n";
+  cin >> nota.Pn4 ;
+  return nota;
+};
+void mostrarNotasCargadas (Estudiante estudiante, Nota newNota){
+  system("cls");
+  cout << "Se ha agregado correctamente la nota\n"<<endl;
+  cout << "codEst:"<< estudiante.codEst << " | " <<"Estudiante: " << estudiante.nombreYAppellido << "\n";
+  cout << "codMat: " << newNota.codMateria  << " | " << "Cedula: "  << newNota.cedulaEstudiante  << "\n";
+  cout << " ==========================================================================\n";
+  cout << "        Pn1       |       Pn2        |       Pn3        |       Pn4       \n ";
+  cout << "==========================================================================\n";
+  cout << "        " <<newNota.notas.Pn1 << "        |";
+  cout << "        " <<newNota.notas.Pn2 << "        |";
+  cout << "        " <<newNota.notas.Pn3 << "        |";
+  cout << "        " <<newNota.notas.Pn4 << "        ";
+  cout << "\n";
+}
 
 void cargarNotasDeAlumno (int cedula){
-  cout << "cargando notas";
+  int indiceEstudiante = buscarEstudiante(cedula);
+  Estudiante estudiante = estudiantes[indiceEstudiante];
+  if(indiceEstudiante != -1){
+    system("cls");
+    Nota newNota;
+    newNota.cedulaEstudiante  = cedula;
+    mostrarMaterias(estudiante.codsMats);
+    cout << "Ingrese codigo de la Materia: ";
+    cin >> newNota.codMateria;
+    bool estaInscrito = inscritoAMateria(estudiante,newNota.codMateria);
+    if(!estaInscrito){
+      cout << "Alumno no inscrito a la materia\n";
+      cargarNotasDeAlumno(cedula);
+    }
+    int indiceMateria = buscarMateria(newNota.codMateria);
+    if(indiceMateria != -1){
+      newNota.notas = establecerNotas();
+      notas.push_back(newNota);
+      mostrarNotasCargadas(estudiante,  newNota);
+    }else{
+      cout << "Ingrese codigo de materia correctamente\n";
+      cargarNotasDeAlumno(cedula);
+    }
+  }else {
+      cout << "No se a encontrado estudiante con esta Cedula." << endl;
+      return;
+  };
 }
 
 // Juan Navas
 void modificarDatosDeAlumno (int cedula){
-  cout << "modificando datos";
+  cout  << "Modificando Datos del Alumno" << endl;
 }
 
 // Yender Rodriguez
 
+int buscarNotaDelAlumno(int cedula, int codMat){
+  for(int i = 0; i < notas.size(); i++){
+    if(notas[i].cedulaEstudiante == cedula && notas[i].codMateria == codMat){
+      return i;
+    }
+  }
+  return -1; 
+}
+void mostrarNotasModificadas (Estudiante estudiante, Nota newNota){
+  system("cls");
+  cout << "codEst:"<< estudiante.codEst << " | " <<"Estudiante: " << estudiante.nombreYAppellido << "\n";
+  cout << "codMat: " << newNota.codMateria  << " | " << "Cedula: "  << newNota.cedulaEstudiante  << "\n";
+  cout << "1. Pn1: " <<newNota.notas.Pn1 << "\n";
+  cout << "2. Pn2: " <<newNota.notas.Pn2<< "\n";
+  cout << "3. Pn3: " <<newNota.notas.Pn3 << "\n";
+  cout << "4. Pn4: " <<newNota.notas.Pn4 << "\n";
+}
+
+Nota menuNotasSwitch( Nota notasNuevas,Estudiante estudiante){
+  int op;
+  system("cls");
+  mostrarNotasModificadas(estudiante, notasNuevas);
+  cout << "Ingrese la evaluacion que desea cambiar:  ";
+  cin >> op;
+  switch (op) {
+  case 1:{
+    cout << "Ingrese nueva nota: ";
+    cin >> notasNuevas.notas.Pn1;
+    cout << "Desea cambiar otra nota (si/no)? ";
+    string resp;
+    cin >> resp;
+    if(resp == "si"){
+      return menuNotasSwitch( notasNuevas,estudiante);
+      break;
+    }else{
+      return notasNuevas;
+    }
+    break;
+  }
+  case 2:{
+    cout << "Ingrese nueva nota: ";
+    cin >> notasNuevas.notas.Pn2;
+    cout << "Desea cambiar otra nota (si/no)? ";
+    string resp;
+    cin >> resp;
+    if(resp == "si"){
+      return menuNotasSwitch( notasNuevas,estudiante);
+      break;
+    }else{
+      return notasNuevas;
+    }
+    break;
+  }
+  case 3:{
+    cout << "Ingrese nueva nota :";
+    cin >> notasNuevas.notas.Pn3;
+    cout << "Desea cambiar otra nota (si/no)? ";
+    string resp;
+    cin >> resp;
+    if(resp == "si"){
+      return menuNotasSwitch( notasNuevas,estudiante);
+      break;
+    }else{
+      return notasNuevas;
+    }
+    break;
+  }
+  case 4:{
+    cout << "Ingrese nueva nota :";
+    cin >> notasNuevas.notas.Pn4;
+    cout << "Desea cambiar otra nota (si/no)? ";
+    string resp;
+    cin >> resp;
+    if(resp == "si"){
+      return menuNotasSwitch( notasNuevas,estudiante);
+      break;
+    }else{
+      return notasNuevas;
+    }
+    break;
+  }
+  default:{
+    cout << "no existe la nota especificada";
+    return notasNuevas;
+    break;
+  }
+  }
+}
+
+
+
 void modificarNotasDeAlumno (int cedula){
-  cout << "modificando notas";
+  int indiceEstudiante = buscarEstudiante(cedula);
+  if(indiceEstudiante == -1){
+    cout << "No se encuentra estudiante con la cedula indicada";
+    return;
+  };
+  Estudiante estudiante =  estudiantes[indiceEstudiante];
+  mostrarMaterias(estudiante.codsMats);
+  int codMat;
+  cout << "Ingrese el codigo de la materia  que desea Modificar: ";
+  cin >> codMat;
+  bool inscritoEnMateria = inscritoAMateria(estudiante,codMat);
+  if(!inscritoAMateria){
+    cout << "No se encuentra estudiante con la cedula indicada";
+    return;
+  }
+  int indexNota  = buscarNotaDelAlumno(cedula, codMat);
+  Nota notasAnteriores = notas[indexNota];
+  Nota notaNueva = menuNotasSwitch(notasAnteriores,estudiante);
+  mostrarNotasModificadas(estudiante, notaNueva);
+  cout << "Desea guardar modificaciones? (si/no): ";
+  string op;
+  cin >> op;
+  if(op == "si"){
+    notas[indexNota] = notaNueva;
+  }else{
+    return ;
+  }
+
 }
 
 void emisionDeActaDeNotas (int cedula){
