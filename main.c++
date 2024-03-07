@@ -4,7 +4,7 @@ Catedra: Algoritmica y programacion
 NombredelPrograma: 
 Lenguaje de Programacion: C++
 Programador: Juan Navas / Yender Rodriguez
-Cedula:  / 28692795
+Cedula:  28326698 / 28692795
 Descripcion del Programa:
 (coloco aqui el enumciado del ejercicio de la guia)
 
@@ -32,6 +32,8 @@ Comentarios:
 #include <regex>
 #include <cstring>
 #define MAX_MATERIAS 10
+#define MAX_ESTUDIANTES 100
+#define MAX_NOTAS 1000
 
 
 using namespace std;
@@ -79,8 +81,8 @@ int codigoEstudiante = 0;
 int codigoDeMateria = 0;
 
 Materia materias[MAX_MATERIAS] = {};
-Estudiante estudiantes[100] = {};
-Nota notas[1000]= {{0,0,{0}}};
+Estudiante estudiantes[MAX_ESTUDIANTES] = {};
+Nota notas[MAX_NOTAS]= {{0,0,{0}}};
 
 
 
@@ -106,6 +108,8 @@ void clearScreen();
 void pause();
 
 bool tieneLetras(int numero);
+bool tieneNumeros(string cadena);
+void showMembrete();
 void showMainMenu ();
 void menuSwitch (int op);
 
@@ -172,15 +176,18 @@ int main (){
   int op;
   while (op != 8){
     clearScreen();
+    showMembrete();
     showMainMenu();
     cout<< "Seleccione una opcion: ";
     while (!(cin >> op) || op < 0 || tieneLetras(op)) {
       cin.clear();
       cin.ignore(256,'\n');
       clearScreen();
+      showMembrete();
       cout << "Por favor ingrese un numero entero positivo \n";
       pause();
       clearScreen();
+      showMembrete();
       showMainMenu();
       cout<< "Seleccione una opcion: ";
     }
@@ -198,7 +205,7 @@ void leerArchivoMaterias() {
   archivo.read((char*)&materias, sizeof(materias) );
   archivo.close( );
 
-  for (int i = 0; i < size(materias) ; i++) {
+  for (int i = 0; i < MAX_MATERIAS ; i++) {
     if(materias[i].codMateria != 0){
       codigoDeMateria++;
     }
@@ -210,7 +217,7 @@ void leerArchivoEstudiantes() {
   archivo.read((char*)&estudiantes, sizeof(estudiantes) );
   archivo.close( );
 
-  for (int i = 0; i < size(estudiantes) ; i++) {
+  for (int i = 0; i < MAX_ESTUDIANTES ; i++) {
     if(estudiantes[i].cedula != 0){
       codigoEstudiante++;
     }
@@ -239,7 +246,12 @@ void escribirNotas(){
   archivo.write((char*)&notas, sizeof(notas) );
   archivo.close( );
 }
-
+void showMembrete (){
+  cout << setw (60) << "Republica Bolivariana de Venezuela" <<endl;
+  cout << setw (75) << "Ministerio del Poder Popular para la Educacion Universitaria "<<endl;
+  cout << setw (71) << "Universidad Nacional Experimental de la Gran Caracas "<<endl;
+  cout << setw (53) << "Nucleo: La Floresta"<< endl;
+}
 void showMainMenu (){
   cout<< "=============================== MENU =================================\n";
   cout<< "    1. Establecer Materia                                             \n";
@@ -271,8 +283,13 @@ system("read -p 'Press Enter to continue...' var");
 }
 bool tieneLetras(int numero) {
   string numeroString  = to_string(numero);
-  regex regex("[a-zA-Z]");
-  return regex_match(numeroString, regex);
+  if(numeroString.find_first_not_of("0123456789") != string::npos) return  true;
+  return false;
+}
+
+bool tieneNumeros(string cadena) {
+  if(cadena.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ") != string::npos) return  true;
+  return false;
 }
 
 
@@ -281,17 +298,20 @@ void menuSwitch (int op) {
     switch(op) {
         case 1:
             clearScreen();
+            showMembrete();
             establecerMateria();
             escribirMaterias();
             pause();
             break;
         case 2:
             clearScreen();
+            showMembrete();
             cout << "cedula del estudiante: "; 
-            while (!(cin >> cedula) ||  cedula < 0) {
+            while (!(cin >> cedula) ||  cedula < 0 || tieneLetras(cedula)) {
               cin.clear();
               cin.ignore(256,'\n');
               clearScreen();
+              showMembrete();
               cout << "Por favor ingrese una cedula valida: ";
             }
             consultarNotasDatosAlumno(cedula);
@@ -299,11 +319,14 @@ void menuSwitch (int op) {
             break;
         case 3:
             clearScreen();
+            showMembrete();
+
             cout << "cedula del estudiante: "; 
             while (!(cin >> cedula)|| cedula < 0 || tieneLetras(cedula)) {
               cin.clear();
               cin.ignore(256,'\n');
               clearScreen();
+              showMembrete();
               cout << "Por favor ingrese una cedula valida: ";
             }
             cargarDatosDeAlumno(cedula);
@@ -312,11 +335,14 @@ void menuSwitch (int op) {
             break;
         case 4:
             clearScreen();
+            showMembrete();
             cout << "cedula del estudiante: "; 
             while (!(cin >> cedula) || tieneLetras(cedula) || cedula < 0) {
               cin.clear();
               cin.ignore(256,'\n');
               clearScreen();
+            showMembrete();
+
               cout << "Por favor ingrese una cedula valida: ";
             }
             cargarNotasDeAlumno(cedula);
@@ -325,11 +351,13 @@ void menuSwitch (int op) {
             break;
         case 5:
             clearScreen();
+            showMembrete();
             cout << "cedula del estudiante: "; 
             while (!(cin >> cedula) || tieneLetras(cedula) || cedula < 0) {
               cin.clear();
               cin.ignore(256,'\n');
               clearScreen();
+              showMembrete();
               cout << "Por favor ingrese una cedula valida: ";
             }
             modificarDatosAlumno(cedula);
@@ -339,11 +367,13 @@ void menuSwitch (int op) {
             break;
         case 6:
             clearScreen();
+            showMembrete();
             cout << "cedula del estudiante: "; 
             while (!(cin >> cedula) || tieneLetras(cedula) || cedula < 0) {
               cin.clear();
               cin.ignore(256,'\n');
               clearScreen();
+              showMembrete();
               cout << "Por favor ingrese una cedula valida: ";
             }
             modificarNotasDeAlumno(cedula);
@@ -352,6 +382,7 @@ void menuSwitch (int op) {
             break;
         case 7:
             clearScreen();
+            showMembrete();
             emitirActaNotas();
             pause();
             break;
@@ -361,6 +392,7 @@ void menuSwitch (int op) {
             break;
         default:
             clearScreen();
+            showMembrete();
             cout << "Opcion invalida, intente de nuevo." << endl;
             pause();
             break;
@@ -371,7 +403,7 @@ void menuSwitch (int op) {
 
 
 int buscarEstudiante(int cedula) {
-  for (int i = 0; i < size( estudiantes); i++) {
+  for (int i = 0; i < MAX_ESTUDIANTES; i++) {
     if (estudiantes[i].cedula == cedula) {
       return i;
     }
@@ -380,7 +412,7 @@ int buscarEstudiante(int cedula) {
 }
 
 int buscarMateria(int codigo) {
-  for (int i = 0; i < size(materias); i++) {
+  for (int i = 0; i < MAX_MATERIAS; i++) {
     if (materias[i].codMateria == codigo) {
       return i;
     }
@@ -389,7 +421,7 @@ int buscarMateria(int codigo) {
 }
 
 int buscarNotaDelAlumno(int cedula, int codMat){
-  for(int i = 0; i < size(notas); i++){
+  for(int i = 0; i < MAX_NOTAS; i++){
     if(notas[i].cedulaEstudiante == cedula && notas[i].codMateria == codMat){
       return i;
     }
@@ -415,7 +447,7 @@ void mostrarMateriasAlumno (int mats[10]){
 void mostrarMaterias (){
   cout << "codMateria" << " | " <<  "Nombre de Materia" << "\n";
   cout << "==========================================="<< "\n";
-  for (int i = 0; i < size(materias); i++)
+  for (int i = 0; i < MAX_MATERIAS; i++)
     {
       if(materias[i].codMateria != 0){
         cout << materias[i].codMateria << "          | " <<  materias[i].Materia << "\n";
@@ -500,6 +532,7 @@ PorcentajeDeEvaluacion establecerPorcentajes (){
 
   if(newPorcentajes.Pnp1+ newPorcentajes.Pnp2+newPorcentajes.Pnp3+newPorcentajes.Pnp4 != 100){
     clearScreen();
+    showMembrete();
     cout << "Ingrese los porcentajes  de manera correcta\n";
     return establecerPorcentajes();
   }else{
@@ -510,6 +543,7 @@ PorcentajeDeEvaluacion establecerPorcentajes (){
 
 void mostrarMensajeDeMateria (Materia newMateria){
   clearScreen();
+  showMembrete();
   cout << "Se ha agregado correctamente la materia.\n"<<endl;
   cout << "codMat: "  << newMateria.codMateria << " | "<<"Nombre: " << newMateria.Materia << "\n";
   cout << " ==========================================================================\n";
@@ -535,12 +569,13 @@ void establecerMateria(){
   cout << "Nombre de la materia: ";
   string nombreMateria;
   getline(cin, nombreMateria);
-   while(nombreMateria == ""){
-    cout << "El nombre de la materia puede estar vacio, ingrese nuevamente: ";
+   while(nombreMateria == "" || tieneNumeros(nombreMateria)){
+    cout << "El nombre de la materia tiene que contener solo letras, ingrese nuevamente: ";
     getline(cin, nombreMateria);
   }
   strcpy(newMateria.Materia,nombreMateria.c_str());
   clearScreen();
+  showMembrete();
   newMateria.porcentajes = establecerPorcentajes();
   materias[codigoDeMateria] = newMateria;
   codigoDeMateria += 1;
@@ -557,11 +592,11 @@ void consultarNotasDatosAlumno(int cedula) {
   Estudiante estudiante = estudiantes[indiceEstudiante];
   mostrarDatosAlumno(estudiante);
   bool tieneMateriasInscritas = false;
-  for(int i = 0; i <size(estudiante.codsMats); i++){
+  for(int i = 0; i <MAX_MATERIAS; i++){
     if(estudiante.codsMats[i] != 0) tieneMateriasInscritas= true;
   }
   if(tieneMateriasInscritas){
-    for(int i = 0; i < size(estudiante.codsMats); i++){
+    for(int i = 0; i < MAX_MATERIAS; i++){
       if(estudiante.codsMats[i] != 0){
         int indiceNota = buscarNotaDelAlumno(cedula,estudiante.codsMats[i]);
         if(indiceNota != -1){
@@ -581,8 +616,8 @@ void pedirNombreYApellido(char nombreYApellido[30]){
   string nombre_c;
   cout << "Ingrese el nombre y apellido del estudiante: ";
   getline(cin,nombre_c);
-  while(nombre_c == ""){
-    cout << "El nombre y apellido no puede estar vacio, ingrese nuevamente: ";
+  while(nombre_c == "" || tieneNumeros(nombre_c)){
+    cout << "El nombre y apellido tiene que contener solo letras, ingrese nuevamente: ";
     getline(cin,nombre_c);
   }
   strcpy(nombreYApellido,nombre_c.c_str());
@@ -630,6 +665,7 @@ void pedirMaterias(int mats[10]){
     }
   if(resp == "s" || resp == "S"){
     clearScreen();
+    showMembrete();
     pedirMaterias(mats);
   }
 }
@@ -642,6 +678,7 @@ void cargarDatosDeAlumno(int cedula) {
     newEstudiante.cedula = cedula;
     pedirNombreYApellido(newEstudiante.nombreYApellido);
     clearScreen();
+    showMembrete();
     cout << "Desea registrar materia? (s/n): ";
     string resp;
     while (!(cin >>resp) || (resp != "s" &&  resp!= "n" && resp !=  "S" && resp != "N")){
@@ -667,6 +704,7 @@ void cargarDatosDeAlumno(int cedula) {
     estudiantes[codigoEstudiante]= newEstudiante;
     codigoEstudiante += 1;
     clearScreen();
+    showMembrete();
     cout << "Estudiante registrado correctamente." << endl;
     cout << "\n" << endl;
     mostrarDatosAlumno(newEstudiante);
@@ -687,6 +725,7 @@ void cargarDatosDeAlumno(int cedula) {
 NotasDeEvaluaciones establecerNotas (){ 
   NotasDeEvaluaciones nota;
   clearScreen();
+  showMembrete();
   cout << "Ingrese notas del 1 al 20 \n";
   cout << "\n";
   cout << "primera evaluacion: ";
@@ -740,6 +779,7 @@ void cargarNotasDeAlumno (int cedula){
       cin.clear();
       cin.ignore(256,'\n');
       clearScreen();
+      showMembrete();
       cout << "Por favor ingrese un numero entero positivo";
     }
     bool estaInscrito = inscritoAMateria(estudiante.codsMats,newNota.codMateria);
@@ -755,7 +795,7 @@ void cargarNotasDeAlumno (int cedula){
     int indiceMateria = buscarMateria(newNota.codMateria);
     if(indiceMateria != -1 ){
       newNota.notas = establecerNotas();
-      for (int i = 0; i < size(notas); i++)
+      for (int i = 0; i < MAX_NOTAS; i++)
       {
         if(notas[i].cedulaEstudiante == 0){
           notas[i]=newNota;
@@ -763,10 +803,12 @@ void cargarNotasDeAlumno (int cedula){
         }
       }
       clearScreen();
+      showMembrete();
       cout << "Se ha agregado correctamente la nota\n"<<endl;
       mostrarNotasCargadas(estudiante,  newNota);
     }else{
       clearScreen();
+      showMembrete();
       cout << "Ingrese codigo de materia correctamente \n";
       cargarNotasDeAlumno(cedula);
     }
@@ -797,6 +839,7 @@ int nuevoCodigoDeMateria (int codMats[10]){
 
 void agregarOBorrarMateria (int codMats[10]){
   clearScreen();
+  showMembrete();
   cin.get();
   bool tieneMaterias = false;
   for(int i =0; i < MAX_MATERIAS ; i++){
@@ -816,6 +859,7 @@ void agregarOBorrarMateria (int codMats[10]){
   }
   if(accion == 1){
     clearScreen();
+    showMembrete();
     int codigoNuevoMat =nuevoCodigoDeMateria(codMats);
     if(codigoNuevoMat !=-1){
       for(int i = 0; i < 10; i++){
@@ -853,6 +897,7 @@ void agregarOBorrarMateria (int codMats[10]){
 
 void mostrarEstudianteModificado (Estudiante estudiante){
   clearScreen();
+  showMembrete();
   cout << "Seleccione el dato que desea modificar mediante su numero correspondiente: " << "\n";
   cout << "1. Cedula: " <<estudiante.cedula << "\n";
   cout << "2. Nombre y Apellido: " << estudiante.nombreYApellido<< "\n";
@@ -872,6 +917,7 @@ void mostrarEstudianteModificado (Estudiante estudiante){
 Estudiante menuEstudiante(Estudiante estudiante){
   int op;
   clearScreen();
+  showMembrete();
   mostrarEstudianteModificado(estudiante);
   cout << "Ingrese el dato que desea cambiar:  ";
   while (!(cin >> op) || tieneLetras(op)||op < 0){
@@ -908,8 +954,8 @@ Estudiante menuEstudiante(Estudiante estudiante){
     cout << "Ingrese nuevo nombre y apellido: ";
     string nombre_c;
     getline(cin,nombre_c);
-    while(nombre_c == ""){
-      cout << "El nombre y apellido no puede estar vacio, ingrese nuevamente: ";
+    while(nombre_c == "" || tieneNumeros(nombre_c)){
+      cout << "El nombre y apellido tiene que contener solo letras, ingrese nuevamente:  ";
     getline(cin,nombre_c);
   }
     strcpy(estudiante.nombreYApellido,nombre_c.c_str());
@@ -987,10 +1033,10 @@ void modificarDatosAlumno(int cedula) {
   if(resp == "s" || resp == "S"){
     int codigosModificados[10] ={0};
     int contadorMateria= 0;
-    for (int i = 0; i < size(estudiante.codsMats); i++)
+    for (int i = 0; i < MAX_MATERIAS; i++)
     {
       int encontrado = false;
-      for (int j = 0; j < size(estudianteModificado.codsMats); j++)
+      for (int j = 0; j < MAX_MATERIAS; j++)
       {
         if(estudiante.codsMats[i] == estudianteModificado.codsMats[j])
           encontrado = true;
@@ -1025,8 +1071,8 @@ void modificarDatosAlumno(int cedula) {
             notas[indicesNotas[k]] = {0,0,{0}};
           }
           if(cedulaAntigua != estudianteModificado.cedula){
-            for(int i = 0; i < size(notas); i++){
-              for (int j = 0; j < size(estudianteModificado.codsMats); j++)
+            for(int i = 0; i < MAX_NOTAS; i++){
+              for (int j = 0; j < MAX_MATERIAS; j++)
               {
                 int indiceNota = buscarNotaDelAlumno(cedulaAntigua,estudianteModificado.codsMats[j]);
                 if(indiceNota != -1) notas[indiceNota].cedulaEstudiante = estudianteModificado.cedula;
@@ -1040,8 +1086,8 @@ void modificarDatosAlumno(int cedula) {
         }
       }else{
         if(cedulaAntigua != estudianteModificado.cedula){
-        for(int i = 0; i < size(notas); i++){
-          for (int j = 0; j < size(estudianteModificado.codsMats); j++)
+        for(int i = 0; i < MAX_NOTAS; i++){
+          for (int j = 0; j < MAX_MATERIAS; j++)
           {
             int indiceNota = buscarNotaDelAlumno(cedulaAntigua,estudianteModificado.codsMats[j]);
             if(indiceNota != -1) notas[indiceNota].cedulaEstudiante = estudianteModificado.cedula;
@@ -1053,8 +1099,8 @@ void modificarDatosAlumno(int cedula) {
       } 
     }else{
       if(cedulaAntigua != estudianteModificado.cedula){
-        for(int i = 0; i < size(notas); i++){
-          for (int j = 0; j < size(estudianteModificado.codsMats); j++)
+        for(int i = 0; i < MAX_NOTAS; i++){
+          for (int j = 0; j < MAX_MATERIAS; j++)
           {
             int indiceNota = buscarNotaDelAlumno(cedulaAntigua,estudianteModificado.codsMats[j]);
             if(indiceNota != -1) notas[indiceNota].cedulaEstudiante = estudianteModificado.cedula;
@@ -1071,6 +1117,7 @@ void modificarDatosAlumno(int cedula) {
 
 void mostrarNotasModificadas (Estudiante estudiante, Nota newNota){
   clearScreen();
+  showMembrete();
   cout << "codEst:"<< estudiante.codEst << " | " <<"Estudiante: " << estudiante.nombreYApellido << "\n";
   cout << "codMat: " << newNota.codMateria  << " | " << "Cedula: "  << newNota.cedulaEstudiante  << "\n";
   cout << "1. Pn1: " <<newNota.notas.Pn1 << "\n";
@@ -1082,6 +1129,7 @@ void mostrarNotasModificadas (Estudiante estudiante, Nota newNota){
 Nota menuNotasSwitch( Nota notasNuevas,Estudiante estudiante){
   int op;
   clearScreen();
+  showMembrete();
   mostrarNotasModificadas(estudiante, notasNuevas);
   cout << "Ingrese la evaluacion que desea cambiar:  ";
   while (!(cin >> op) || tieneLetras(op)||op < 0){
@@ -1245,6 +1293,7 @@ void modificarNotasDeAlumno (int cedula){
 
 void emitirActaNotas() {
   clearScreen();
+  showMembrete();
   mostrarMaterias();
   int codMateria;
   
@@ -1255,6 +1304,7 @@ void emitirActaNotas() {
       cout << "Por favor ingrese un numero entero positivo: ";
     }
   clearScreen();
+  showMembrete();
   
   int indiceMateria = buscarMateria(codMateria);
   
@@ -1267,17 +1317,20 @@ void emitirActaNotas() {
     cout << "Catedra: "<<materia.Materia << endl;
     cout << endl;
 
-    cout << setw(63) << materia.porcentajes.Pnp1<<"%" << setw(8) << materia.porcentajes.Pnp2 <<"%" 
-    << setw(8)<< materia.porcentajes.Pnp3<<"%" << setw(8)  << materia.porcentajes.Pnp4<<"%"  <<endl;
+    cout << setw(69) << materia.porcentajes.Pnp1<<"%" << setw(15) << materia.porcentajes.Pnp2 <<"%" 
+    << setw(15)<< materia.porcentajes.Pnp3<<"%" << setw(15)  << materia.porcentajes.Pnp4<<"%"  <<endl;
 
     cout << setw(10) << "Cod.Est" << setw(15) << "Cedula" << setw(30) << "Nombre y Apellido" 
-    << setw(10) << "Np1" << setw(10) << "NP2" << setw(10) << "NP3" << setw(10) << "NP4" 
+    << setw(10) << "Np1" << setw(5) << "Pnp1" 
+    << setw(10) << "Np2" << setw(5) << "Pnp2" 
+    << setw(10) << "Np3" << setw(5) << "Pnp3" 
+    << setw(10) << "Np4" << setw(5) << "Pnp4" 
     << setw(15) << "Nota Final" << setw(15) << "Status"  << endl;
-    cout << "===============================================================================================================================" <<"\n" << endl;
+    cout << "======================================================================================================================================" <<"\n" << endl;
 
 
-    for(int i = 0; i < size(estudiantes); i++){
-      for (int j = 0; j < size(estudiantes[i].codsMats); j++)
+    for(int i = 0; i < MAX_ESTUDIANTES; i++){
+      for (int j = 0; j < MAX_MATERIAS; j++)
       {
         if(codMateria == estudiantes[i].codsMats[j]){
           int indiceNota = buscarNotaDelAlumno(estudiantes[i].cedula, estudiantes[i].codsMats[j]);
@@ -1303,13 +1356,20 @@ void emitirActaNotas() {
 
 
         cout << setw(10) << estudiantes[i].codEst << setw(15) << estudiantes[i].cedula << setw(30) << estudiantes[i].nombreYApellido 
-             << setw(10) << notaEstudiante.notas.Pn1 << setw(10) << notaEstudiante.notas.Pn2<< setw(10) << notaEstudiante.notas.Pn3 << setw(10) << notaEstudiante.notas.Pn4
+             << setw(10) << notaEstudiante.notas.Pn1 << setw(5) << pnpf1
+             << setw(10) << notaEstudiante.notas.Pn2 << setw(5) << pnpf2
+             << setw(10) << notaEstudiante.notas.Pn3 << setw(5) << pnpf3
+             << setw(10) << notaEstudiante.notas.Pn4 << setw(5) << pnpf4
              << setw(15) << nf << setw(15) << status << "\n" << endl;
         }else{
 
 
           cout << setw(10) << estudiantes[i].codEst << setw(15) << estudiantes[i].cedula << setw(30) << estudiantes[i].nombreYApellido 
-          << setw(10) << "N/C" << setw(10) << "N/C" << setw(10) << "N/C"<< setw(10) << "N/C"<< setw(15) << "N/C" << setw(15) << "Reprobado" <<"\n" << endl;
+          << setw(10) << "N/C" << setw(5) << "N/C"
+          << setw(10) << "N/C" << setw(5) << "N/C"
+          << setw(10) << "N/C" << setw(5) << "N/C"
+          << setw(10) << "N/C" << setw(5) << "N/C"
+          << setw(15) << "N/C" << setw(15) << "Reprobado" <<"\n" << endl;
         }
 
         }
